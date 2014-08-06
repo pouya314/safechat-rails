@@ -13,3 +13,8 @@
  *= require_tree .
  *= require_self
  */
+
+ #chat-text {
+   overflow: auto;
+   height: 500px;
+ }

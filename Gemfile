@@ -43,3 +43,6 @@ gem "puma"
 gem "faye-websocket"
 gem "sinatra"
 gem "redis"
+gem 'bootstrap-sass', '~> 3.2.0'
+gem 'autoprefixer-rails'
+gem 'rails_12factor', group: :production

@@ -1,3 +1,11 @@
+<div id="container-for-key-submission" style="display:none;">
+  <%= form_for(Key.new, remote: true) do |f| %>
+    <%= f.text_field :username %>
+    <%= f.text_area :content %>
+    <%= f.submit "send key", {id: 'send_key'} %>
+  <% end %>
+</div>
+
 <div class="container">
   <form id="input-form" class="form-inline" style="margin-top: 20px;">
     <div class="form-group">
@@ -16,11 +24,15 @@
 <script type="text/javascript" charset="utf-8">
   var username = prompt("Enter your username", "");
   document.getElementById('input-handle').value = username;
+  document.getElementById('key_username').value = username;
+  
   var PassPhrase = prompt("Enter your password", "");
   var Bits = 512;
   var PrivateKey = cryptico.generateRSAKey(PassPhrase, Bits);
   var PublicKey = cryptico.publicKeyString(PrivateKey);
-  console.log(PublicKey);
+  document.getElementById('key_content').value = PublicKey;
+  
+  $('#send_key').click();
 
   
   var scheme   = "<%= @scheme %>";

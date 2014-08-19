@@ -27,9 +27,9 @@
   document.getElementById('key_username').value = username;
   
   var PassPhrase = prompt("Enter your password", "");
-  var Bits = 512;
+  var Bits       = 512;
   var PrivateKey = cryptico.generateRSAKey(PassPhrase, Bits);
-  var PublicKey = cryptico.publicKeyString(PrivateKey);
+  var PublicKey  = cryptico.publicKeyString(PrivateKey);
   document.getElementById('key_content').value = PublicKey;
   
   $('#send_key').click();
@@ -38,19 +38,41 @@
   var scheme   = "<%= @scheme %>";
   var uri      = scheme + window.document.location.host + "/";
   var ws       = new WebSocket(uri);
+  
+  
+  // receiving message
   ws.onmessage = function(message) {
-    var data = JSON.parse(message.data);
-    $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + data.handle + "</div><div class='panel-body'>" + data.text + "</div></div>");
-    $("#chat-text").stop().animate({
-      scrollTop: $('#chat-text')[0].scrollHeight
-    }, 800);
+    var data                 = JSON.parse(message.data);
+    var received_username    = data.handle;
+    var received_cipher_text = data.text;
+    
+    if (received_username !== username) {
+      // decrypt the message
+      var DecryptionResult    = cryptico.decrypt(received_cipher_text, PrivateKey);
+      var received_plain_text = DecryptionResult.plaintext;
+      
+      // show it on the screen
+      $("#chat-text").prepend("<div class='panel panel-default'><div class='panel-heading'>" + received_username + "</div><div class='panel-body'>" + received_plain_text + "</div></div>");      
+    };
   };
 
+  
+  // sending message
   $("#input-form").on("submit", function(event) {
     event.preventDefault();
     var handle = $("#input-handle")[0].value;
     var text   = $("#input-text")[0].value;
-    ws.send(JSON.stringify({ handle: handle, text: text }));
-    $("#input-text")[0].value = "";
+    
+    $("#chat-text").prepend("<div class='panel panel-default' style='background-color: yellow;'><div class='panel-heading'>" + handle + "</div><div class='panel-body'>" + text + "</div></div>");
+    
+    // 1 : get the public key of the other party
+    // 2 : encrypt the msg text using that acquired public key
+    // 3 : send the encrypted msg..
+    $.get("<%= retrieve_keys_url %>", { username: handle} )
+      .done(function( data ) {
+        var encrypted_message = cryptico.encrypt(text, data.content);
+        ws.send(JSON.stringify({ handle: handle, text: encrypted_message.cipher }));
+        $("#input-text")[0].value = "";
+    });
   });
 </script>

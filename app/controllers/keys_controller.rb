@@ -51,6 +51,11 @@ class KeysController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def retrieve
+    @retval = Key.where.not(username: params[:username]).first
+    render json: @retval
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :keys
+  
+  resources :keys do
+    collection do
+      get 'retrieve'
+    end
+  end
 
   get 'chat/room'
 

@@ -54,6 +54,7 @@ class ChatBackend
         p [:close, ws.object_id, event.code, event.reason]
         @clients.delete(ws)
         ws = nil
+        Key.destroy_all
       end
 
       # Return async Rack response

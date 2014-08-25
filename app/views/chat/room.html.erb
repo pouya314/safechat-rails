@@ -14,7 +14,10 @@
     <div class="form-group">
       <input id="input-text" type="text" class="form-control" placeholder="Your message" autofocus />
     </div>
-    <button class="btn btn-primary" type="submit">Send</button>
+    <label class="checkbox-inline" style="margin-right:10px;">
+      <input type="checkbox" id="signature" value="signed"> Sign 
+    </label>
+    <button class="btn btn-primary" type="submit">Send Message</button>
   </form>
   <hr>
   <div id="chat-text">
@@ -75,7 +78,11 @@
     // 3 : send the encrypted msg..
     $.get("<%= retrieve_keys_url %>", { username: handle} )
       .done(function( data ) {
-        var encrypted_message = cryptico.encrypt(text, data.content);
+        if ($("#signature").is(":checked")) {
+          var encrypted_message = cryptico.encrypt(text, data.content, PrivateKey);
+        } else {
+          var encrypted_message = cryptico.encrypt(text, data.content);
+        }
         ws.send(JSON.stringify({ handle: handle, text: encrypted_message.cipher }));
         $("#input-text")[0].value = "";
     });

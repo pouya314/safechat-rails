@@ -47,13 +47,18 @@
     var received_cipher_text = data.text;
     
     if (received_username !== username) {
-      // decrypt the message
+      // decrypt the message && check signature
       var DecryptionResult    = cryptico.decrypt(received_cipher_text, PrivateKey);
       var received_plain_text = DecryptionResult.plaintext;
+      var received_signature  = DecryptionResult.signature;
       
       // show it on the screen
-      $("#chat-text").prepend("<div class='panel panel-default'><div class='panel-heading'>" + received_username + "</div><div class='panel-body'>" + received_plain_text + "</div></div>");      
-    };
+      if (received_signature === 'verified') {
+        $("#chat-text").prepend("<div class='panel panel-default'><div class='panel-heading'>" + received_username + "<img src='assets/verified.gif' width='20' height='20' style='margin-left:10px;'>" + "</div><div class='panel-body'>" + received_plain_text + "</div></div>");      
+      } else {
+        $("#chat-text").prepend("<div class='panel panel-default'><div class='panel-heading'>" + received_username + "<img src='assets/unverified.png' width='20' height='20' style='margin-left:10px;'>" + "</div><div class='panel-body'>" + received_plain_text + "</div></div>");      
+      }
+    }
   };
 
   

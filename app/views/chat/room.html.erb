@@ -57,9 +57,9 @@
       
       // show it on the screen
       if (received_signature === 'verified') {
-        $("#chat-text").prepend("<div class='panel panel-default'><div class='panel-heading'>" + received_username + "<img src='assets/verified.gif' width='20' height='20' style='margin-left:10px;'>" + "</div><div class='panel-body'>" + received_plain_text + "</div></div>");      
+        $("#chat-text").prepend("<div class='panel panel-default'><div class='panel-heading'>" + received_username + "<span class='signature-verification'>" + "<%=j image_tag('verified.gif', size: '20x20') %>" + "</span>" + "</div><div class='panel-body'>" + received_plain_text + "</div></div>");      
       } else {
-        $("#chat-text").prepend("<div class='panel panel-default'><div class='panel-heading'>" + received_username + "<img src='assets/unverified.png' width='20' height='20' style='margin-left:10px;'>" + "</div><div class='panel-body'>" + received_plain_text + "</div></div>");      
+        $("#chat-text").prepend("<div class='panel panel-default'><div class='panel-heading'>" + received_username + "<span class='signature-verification'>" + "<%=j image_tag('unverified.png', size: '20x20') %>" + "</span>" + "</div><div class='panel-body'>" + received_plain_text + "</div></div>");      
       }
     }
   };
